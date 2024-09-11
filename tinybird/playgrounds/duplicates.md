@@ -19,7 +19,7 @@ FROM (
 SELECT COUNT(DISTINCT site_name, timestamp) AS distinct_report_count
 FROM mongo_weather_reports
 ```
-## where_are_duplicates_coming_from
+## duplicates_where
 
 ```sql
 SELECT toStartOfMonth(timestamp) AS month, site_name, COUNT(*) AS num_duplicates
@@ -28,7 +28,7 @@ GROUP BY month,site_name
 ORDER BY num_duplicates DESC
 ```
 
-## including_all_duplicates_for_city
+## duplicates_for_city
 
 ```sql
 SELECT timestamp, site_name, temp_f
