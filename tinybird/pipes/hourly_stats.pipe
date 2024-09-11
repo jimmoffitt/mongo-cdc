@@ -1,0 +1,23 @@
+DESCRIPTION >
+	Same as daily stats except for looking at hourly intervals.
+
+
+NODE endpoint
+SQL >
+
+    %
+        SELECT
+            formatDateTime(toStartOfHour(timestamp), '%Y-%m-%d') as date,
+            site_name as city,
+            ROUND(Avg(temp_f),2) AS temp_avg,
+            Max(temp_f) as temp_max, 
+            Min(temp_f) as temp_min
+        FROM mongo_weather_reports
+        WHERE timestamp > Now() - INTERVAL 7 DAYS
+           {% if defined(city) %}
+                AND lowerUTF8(site_name) LIKE lowerUTF8({{ String(city) }})
+           {% end %}
+        GROUP BY date, city
+        ORDER BY date DESC, site_name ASC
+
+

@@ -1,0 +1,35 @@
+DESCRIPTION >
+	Generate daily statistics for the last week. Temperature averages, mins and maxs.  
+Showing an example of multiple Nodes and chaining them together.
+
+
+NODE get_data
+SQL >
+
+    %
+        SELECT timestamp, site_name, temp_f
+        FROM mongo_weather_reports
+        WHERE timestamp > Now() - INTERVAL 7 DAYS
+           {% if defined(city) %}
+                AND lowerUTF8(site_name) LIKE lowerUTF8({{ String(city) }})
+           {% end %}
+
+
+
+NODE endpoint
+DESCRIPTION >
+    For the time period returned from the previous Node (in this case the most recent 7 days), determine the daily temperature averages and mins/maxs.
+
+SQL >
+
+    SELECT
+            formatDateTime(toStartOfDay(timestamp), '%Y-%m-%d') as date,
+            site_name,
+            ROUND(Avg(temp_f),2) AS temp_avg,
+            Min(temp_f) as temp_min,
+            Max(temp_f) as temp_max 
+        FROM get_data
+        GROUP BY date, site_name
+        ORDER BY date DESC, site_name ASC
+
+

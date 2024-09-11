@@ -1,0 +1,34 @@
+DESCRIPTION >
+	Used to extract 'cleaned up' attributes from the raw JSON recieved from the source. 
+
+[] This could be converted to a Copy pipe to maintain a `site_location` Data Source.
+
+
+TOKEN "site_locations_endpoint_read_9164" READ
+
+NODE extract_json
+SQL >
+
+    SELECT JSONExtractString(__value, 'site_name') AS site_name,
+      JSONExtractString(__value, 'state_code') AS state_code,
+      JSONExtractString(__value, 'lat') AS lat,
+      JSONExtractString(__value, 'long') AS long,
+      JSONExtractString(__value, 'timezone') AS timezone
+    FROM site_locations_mongodb
+
+
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT * FROM extract_json
+    WHERE 1=1
+    {% if defined(state) %}
+      AND lowerUTF8(state_code) LIKE lowerUTF8( {{ String(state, description='Two-character State code.') }})
+    {% end %}
+    {% if defined(city) %}
+      AND lowerUTF8(site_name) LIKE lowerUTF8( {{ String(city)}} )
+    {% end %}
+
+

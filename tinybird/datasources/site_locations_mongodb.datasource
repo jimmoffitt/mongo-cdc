@@ -1,0 +1,23 @@
+DESCRIPTION >
+    Pulled from an Atlas MongoDB database via an Estuary Source.
+
+Pulled in via the Kafka Connector, and is a bit overkill for this dimensional and slowly changing metadata.
+
+Generally, the Estuary publisher does not need to run. (And probably is not running.)
+
+SCHEMA >
+    `__value` String
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(__timestamp)"
+ENGINE_SORTING_KEY "__timestamp"
+
+KAFKA_CONNECTION_NAME 'estuary-mongodb'
+KAFKA_TOPIC 'TinybirdDev/mongodb/weather-data/site-locations'
+KAFKA_GROUP_ID 'TinybirdDev/mongodb/weather-data/site-locations_1725033409578'
+KAFKA_AUTO_OFFSET_RESET 'earliest'
+KAFKA_STORE_RAW_VALUE 'True'
+KAFKA_STORE_HEADERS 'True'
+KAFKA_STORE_BINARY_HEADERS 'True'
+KAFKA_TARGET_PARTITIONS 'auto'
+KAFKA_KEY_AVRO_DESERIALIZATION ''

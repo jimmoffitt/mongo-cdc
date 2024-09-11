@@ -1,0 +1,15 @@
+TOKEN "most_recent_endpoint_read_1389" READ
+
+NODE endpoint
+SQL >
+
+    %
+    SELECT timestamp AS timestamp, site_name AS site_name, temp_f AS temp_f, NOW() - timestamp AS seconds_ago
+    FROM mongo_weather_reports
+    WHERE 1=1
+       {% if defined(city) %}
+            AND lowerUTF8(site_name) LIKE lowerUTF8({{ String(city, description="Name of US City to get data for. Data is available for the 175 most populated cities in the US. Optional and defaults to all cities.") }})
+       {% end %}
+    ORDER BY timestamp DESC
+
+

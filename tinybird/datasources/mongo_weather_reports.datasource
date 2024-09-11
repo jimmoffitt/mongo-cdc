@@ -1,0 +1,37 @@
+DESCRIPTION >
+    A live feed of 10-minute weather reports for 175 US Cities. Well, currently only live when the data generator is running. 
+The measurement interval for any City is at least 10-minutes, and weather reports trickle in every minute or so. 
+
+This feed was started in early September. This data is available starting May 2023, but it has not been backfilled here. 
+
+This Data Source is riddled with duplicates (shared site_name and timestamp) and it is left as an exercise of the user to generate a deduped Data Source.
+
+SCHEMA >
+    `timestamp` DateTime `json:$.fullDocument.timestamp`,
+    `site_name` String `json:$.fullDocument.site_name`,
+    `temp_f` Float32 `json:$.fullDocument.temp_f`,
+    `clouds` Int16 `json:$.fullDocument.clouds`,
+    `description` String `json:$.fullDocument.description`,
+    `humidity` Int16 `json:$.fullDocument.humidity`,
+    `precip` Float32 `json:$.fullDocument.precip`,
+    `pressure` Int32 `json:$.fullDocument.pressure`,
+    `wind_dir` Int16 `json:$.fullDocument.wind_dir`,
+    `wind_speed` Float32 `json:$.fullDocument.wind_speed`,
+    `operationType` String `json:$.operationType`,
+    `__id` String `json:$.documentKey._id`,
+    `clusterTime` Int64 `json:$.clusterTime`,
+    `wallTime` Int64 `json:$.wallTime`
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(__timestamp)"
+ENGINE_SORTING_KEY "timestamp, site_name, temp_f"
+
+KAFKA_CONNECTION_NAME 'mongo_weather_data'
+KAFKA_TOPIC 'mongo.weather-data.weather-reports'
+KAFKA_GROUP_ID 'mongo.weather-data.weather-reports_1725657066907'
+KAFKA_AUTO_OFFSET_RESET 'earliest'
+KAFKA_STORE_RAW_VALUE 'False'
+KAFKA_STORE_HEADERS 'False'
+KAFKA_STORE_BINARY_HEADERS 'True'
+KAFKA_TARGET_PARTITIONS 'auto'
+KAFKA_KEY_AVRO_DESERIALIZATION ''
