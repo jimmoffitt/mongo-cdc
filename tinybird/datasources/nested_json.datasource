@@ -2,7 +2,7 @@ SCHEMA >
     `event_type` String `json:$.event_type`,
     `timestamp` DateTime64(3) `json:$.timestamp`,
     `site_name` String `json:$.site_name`,
-    `reports` String `json:$.reports`
+    `message` String `json:$.message`
 
 ENGINE "MergeTree"
 ENGINE_PARTITION_KEY "toYear(timestamp)"
