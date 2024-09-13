@@ -9,7 +9,7 @@ A collection of resources for the `Real-time MongoDB CDC with Confluent and Tiny
 
 ### JSON details
 
-#### Weather report objects:
+#### Flat weather report object:
 
 ```json
 {
@@ -25,6 +25,42 @@ A collection of resources for the `Real-time MongoDB CDC with Confluent and Tiny
 	"description": "overcast clouds"
 }
 
+```
+
+#### Nested weather report object:
+
+```json
+{
+    "event_type": "report",
+    "timestamp": "2024-09-01 00:00:02",
+    "site_name": "Louisville",
+    "message": {
+        "temp_f": 75.47,
+        "precip": 0,
+        "humidity": 80,
+        "pressure": 1014,
+        "wind": {
+            "speed": 8.05,
+            "direction": 20
+        },
+        "clouds": 100,
+        "description": "thunderstorm"
+    }
+}
+```
+
+#### Nested alert report object:
+
+```json
+{
+    "event_type": "alert",
+    "timestamp": "2024-09-13T03:27:42Z",
+    "site_name": "Orange",
+    "message": {
+        "expire_time": "2024-09-14T02:27:42Z",
+        "message": "Weather Alert for Orange. High Wind Watch/Warning. Expires at 2024-09-14T02:27:42Z."
+    }
+}
 ```
 
 
